@@ -92,6 +92,20 @@ public class Flappy extends javax.swing.JFrame {
             e.printStackTrace();
         }
    }
+   public void Recibir_clietes(){
+       try{
+            in = new DataInputStream(this.cliente.getInputStream());
+            out = new DataOutputStream(this.cliente.getOutputStream());
+            
+            String data=in.readUTF();
+            System.out.println(data);
+            
+           
+           
+         } catch (Exception e) {
+            e.printStackTrace();
+        }
+   }
     public static void main(String args[]) {
         /* Set the Nimbus look and feel */
         //<editor-fold defaultstate="collapsed" desc=" Look and feel setting code (optional) ">

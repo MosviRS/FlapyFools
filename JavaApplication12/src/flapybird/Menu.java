@@ -96,6 +96,7 @@ public class Menu extends javax.swing.JFrame {
                  Flappy iniciar = new Flappy();
                  iniciar.cliente=concetar();
                  JOptionPane.showMessageDialog(null,"Waiting","Esperando a los demas jugadores",JOptionPane.INFORMATION_MESSAGE);
+                 iniciar.Recibir_clietes();
                  iniciar.comenzar();
                  iniciar.setVisible(true);
                  this.dispose();
@@ -108,6 +109,9 @@ public class Menu extends javax.swing.JFrame {
          try {
             //Creamos el socket con el host y el puerto, declaramos los streams de comunicacion
             cliente = new Socket(host,puerto);
+            in = new DataInputStream(cliente.getInputStream());
+            out = new DataOutputStream(cliente.getOutputStream());
+            out.writeUTF("0;0;Color;0");
             
         } catch (Exception e) {
             e.printStackTrace();
