@@ -5,6 +5,7 @@
  */
 package flapybird;
 
+import clases.Circles;
 import java.awt.BorderLayout;
 import java.io.DataInputStream;
 import java.io.DataOutputStream;
@@ -30,6 +31,14 @@ public class Flappy extends javax.swing.JFrame {
     private DataInputStream in;
     public Flappy() {
         initComponents();
+         
+         
+    }
+    public void main(Circles cir){
+        krug.cir=cir;
+        krug.main();
+        System.out.println(cir.getId()+" "+cir.getClintes());
+        
         this.setSize(580, 700);
         this.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
         this.setLocationRelativeTo(null);
@@ -39,10 +48,9 @@ public class Flappy extends javax.swing.JFrame {
         panel.add(krug);
         setContentPane(panel);//'panel' al estar dentro del rootpane es totalmente visible
         this.setVisible(true);
-       
-         
+    
     }
-
+    
     /**
      * This method is called from within the constructor to initialize the form.
      * WARNING: Do NOT modify this code. The content of this method is always
@@ -71,40 +79,50 @@ public class Flappy extends javax.swing.JFrame {
     /**
      * @param args the command line arguments
      */
-  
-   public void comenzar(){
+  public String [] recibir_data(){
+       String [] separado=null;
        try{
             in = new DataInputStream(this.cliente.getInputStream());
             out = new DataOutputStream(this.cliente.getOutputStream());
             
             String data=in.readUTF();
             System.out.println(data);
-            String separado[]= data.split(";");
-            if(separado[3].equals("0")){
+            separado= data.split(";");
+            
+           
+         } catch (Exception e) {
+            e.printStackTrace();
+        }
+       return  separado;
+  }
+   public void comenzar(String bandera){
+      
+            if(bandera.equals("0")){
                 anima= new Animacion(cliente);
                 Thread anim = new Thread(anima);
                 anim.start();
             }else{
                 JOptionPane.showMessageDialog(null,"Waiting","Esperando a los demas jugadores",JOptionPane.INFORMATION_MESSAGE);
             }
-           
-         } catch (Exception e) {
-            e.printStackTrace();
-        }
+    
    }
    public void Recibir_clietes(){
+       
+     
        try{
             in = new DataInputStream(this.cliente.getInputStream());
             out = new DataOutputStream(this.cliente.getOutputStream());
             
             String data=in.readUTF();
-            System.out.println(data);
+            System.out.println("datso "+data);
             
+           
            
            
          } catch (Exception e) {
             e.printStackTrace();
         }
+       
    }
     public static void main(String args[]) {
         /* Set the Nimbus look and feel */

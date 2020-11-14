@@ -33,7 +33,7 @@ public class Topka extends javax.swing.JPanel implements MouseListener{
      */
     int numBars = 200;
     Rectangle[] bars = new Rectangle[numBars];
-    Circles [] cir = new Circles[1];
+    Circles cir;
     Font font = new Font("TimesRoman", Font.PLAIN, 40);
     Font malFont = new Font("TimesRoman", Font.BOLD, 15);
     public int HEITH_WINDOWS_TOP,HEITH_WINDOWS_DOWN;
@@ -58,6 +58,10 @@ public class Topka extends javax.swing.JPanel implements MouseListener{
     public Topka()
     {
         
+        
+           
+    }
+    public void main(){
         
             x = 150;
             y = 50;
@@ -119,13 +123,19 @@ public class Topka extends javax.swing.JPanel implements MouseListener{
     {
         Random rand = new Random();
         int cirX=150;
-        for (int i = 0; i < cir.length; i++) {
-            
-               Circles fill= new Circles(cirX,50);
-               cir[i]=fill;
-               cirX=cirX-50;
+        cir.setPos_X(x);
+        cir.setPos_Y(y);
+        
+//        cir.pos_X=x;
+//        cir.pos_Y=y;
                
-        }
+//        for (int i = 0; i < cir.length; i++) {
+//            
+//               Circles fill= new Circles(cirX,50);
+//               cir[i]=fill;
+//               cirX=cirX-50;
+//               
+//        }
      
         for (int i = 0; i < numBars; i++)
         {
@@ -154,18 +164,27 @@ public class Topka extends javax.swing.JPanel implements MouseListener{
             Rectangle low = new Rectangle(bar);
             low.height += (h - low.y);
             low.y = bar.height + minGap;
-            for (int j = 0; j < cir.length; j++) {
-                    if (bar.intersects(topka) || low.intersects(topka)){
+            if (bar.intersects(topka) || low.intersects(topka)){
                         kolizija = true;
-                    }else if(cir[j].pos_Y < -90){
+                    }else if(cir.getPos_Y() < -90){
 
                         kolizija = true;
                     }else{
                         if (bar.x + bar.width < topka.x)
                             poeni = i+1;
                     }
-                
-            }
+//            for (int j = 0; j < cir.length; j++) {
+//                    if (bar.intersects(topka) || low.intersects(topka)){
+//                        kolizija = true;
+//                    }else if(cir[j].pos_Y < -90){
+//
+//                        kolizija = true;
+//                    }else{
+//                        if (bar.x + bar.width < topka.x)
+//                            poeni = i+1;
+//                    }
+//                
+//            }
             
             
             g.setColor(orange);
@@ -255,11 +274,15 @@ public class Topka extends javax.swing.JPanel implements MouseListener{
         if (kolizija)
             gameOver = true;
         
-        for (int i = 0; i < cir.length; i++) {
-             
-             cir[i].DrawShapes(g,topkaBoja,topka);
-         
-        }
+        
+        
+        cir.DrawShapes(g,topkaBoja,topka);
+        
+//        for (int i = 0; i < cir.length; i++) {
+//             
+//             cir[i].DrawShapes(g,topkaBoja,topka);
+//         
+//        }
       
              g.setFont(malFont);
              g.setColor(Color.white);

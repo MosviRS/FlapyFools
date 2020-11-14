@@ -15,7 +15,36 @@ import java.awt.Rectangle;
  * @author Sammy Guergachi <sguergachi at gmail.com>
  */
 public class Circles extends Clase_Cliente {
-    public int pos_X,pos_Y;
+
+    /**
+     * @return the pos_X
+     */
+    public int getPos_X() {
+        return pos_X;
+    }
+
+    /**
+     * @param pos_X the pos_X to set
+     */
+    public void setPos_X(int pos_X) {
+        this.pos_X = pos_X;
+    }
+
+    /**
+     * @return the pos_Y
+     */
+    public int getPos_Y() {
+        return pos_Y;
+    }
+
+    /**
+     * @param pos_Y the pos_Y to set
+     */
+    public void setPos_Y(int pos_Y) {
+        this.pos_Y = pos_Y;
+    }
+    private int pos_X;
+    private int pos_Y;
      int radius = 30;
      public  Circles(int x, int y){
          this.pos_X=x;
@@ -25,12 +54,13 @@ public class Circles extends Clase_Cliente {
          
      }
       public void DrawShapes(Graphics g,Color topkaBoja,Rectangle topkas){
-          this.pos_Y=topkas.y;
+          this.setPos_Y(topkas.y);
+          this.setPos_X(topkas.x);
           //this.pos_X=topkas.x;
         g.setColor(topkaBoja);
-        g.fillOval(pos_X, topkas.y, radius, radius);
+        g.fillOval(topkas.x, topkas.y, radius, radius);
         g.setColor(Color.black);
-        g.drawOval(pos_X,topkas.y, radius, radius);
+        g.drawOval(topkas.x,topkas.y, radius, radius);
   
     }
 }

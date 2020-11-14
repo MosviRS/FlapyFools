@@ -62,7 +62,7 @@ public class Servidor {
                     int xo = turnos % 2 == 0 ? 1 : 0;
                     turnos++;
                     //Instanciamos un hilo que estara atendiendo al cliente y lo ponemos a escuchar
-                    confirmacion(usuarios.get(i),i);
+                    confirmacion(usuarios.get(i),i,usuarios.size());
                     Runnable  run = new HiloServidor(usuarios.get(i),usuarios,xo);
                     Thread hilo = new Thread(run);
                     hilo.start();
@@ -81,11 +81,11 @@ public class Servidor {
             e.printStackTrace();
         }
     }
-    public void confirmacion(Socket cli,int id_jugador){
+    public void confirmacion(Socket cli,int id_jugador, int noJugadores){
         try{
             in = new DataInputStream(cli.getInputStream());
             out = new DataOutputStream(cli.getOutputStream());
-            out.writeUTF(String.valueOf(id_jugador)+";0;0;0");
+            out.writeUTF(String.valueOf(id_jugador)+";"+noJugadores+";0;0");
         }catch(Exception e){
             System.out.println("no s eudo mandar ka condirmacion");
         }

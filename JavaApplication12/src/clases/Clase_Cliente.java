@@ -13,17 +13,17 @@ package clases;
 public abstract class Clase_Cliente {
 
     /**
-     * @return the esatdo
+     * @return the color
      */
-    public int getEsatdo() {
-        return esatdo;
+    public String getColor() {
+        return color;
     }
 
     /**
-     * @param esatdo the esatdo to set
+     * @param color the color to set
      */
-    public void setEsatdo(int esatdo) {
-        this.esatdo = esatdo;
+    public void setColor(String color) {
+        this.color = color;
     }
 
     /**
@@ -67,10 +67,42 @@ public abstract class Clase_Cliente {
     public void setId(String id) {
         this.id = id;
     }
+
+    /**
+     * @return the clintes
+     */
+    public String getClintes() {
+        return clintes;
+    }
+
+    /**
+     * @param clintes the clintes to set
+     */
+    public void setClintes(String clintes) {
+        this.clintes = clintes;
+    }
+
+    /**
+     * @return the esatdo
+     */
+    public int getEsatdo() {
+        return esatdo;
+    }
+
+    /**
+     * @param esatdo the esatdo to set
+     */
+    public void setEsatdo(int esatdo) {
+        this.esatdo = esatdo;
+    }
+
+   
     private String nombre;
     private String ip;
     private String id;
+    private String clintes;
     private int esatdo;
+    private String color;
     
 
 }

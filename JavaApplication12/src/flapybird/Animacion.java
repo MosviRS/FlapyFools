@@ -36,11 +36,12 @@ public class Animacion extends Thread{
     //Si estamos en nuestra misma maquina usamos localhost si no la ip de la maquina servidor
     private String host = "localhost";
     private boolean turno;
-    private Circles cri= new Circles();
+    private Circles cir;
     String recibido [];
     String datos;
      public  Animacion(Socket cliente){
           this.cliente=cliente;
+          
           try {
             //Creamos el socket con el host y el puerto, declaramos los streams de comunicacion
             in = new DataInputStream(this.cliente.getInputStream());
