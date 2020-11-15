@@ -17,6 +17,20 @@ import java.awt.Rectangle;
 public class Circles extends Clase_Cliente {
 
     /**
+     * @return the col
+     */
+    public Color getCol() {
+        return col;
+    }
+
+    /**
+     * @param col the col to set
+     */
+    public void setCol(Color col) {
+        this.col = col;
+    }
+
+    /**
      * @return the pos_X
      */
     public int getPos_X() {
@@ -45,7 +59,8 @@ public class Circles extends Clase_Cliente {
     }
     private int pos_X;
     private int pos_Y;
-     int radius = 30;
+    int radius = 30;
+    private Color col;
      public  Circles(int x, int y){
          this.pos_X=x;
          this.pos_Y=y;
@@ -57,7 +72,7 @@ public class Circles extends Clase_Cliente {
           this.setPos_Y(topkas.y);
           this.setPos_X(topkas.x);
           //this.pos_X=topkas.x;
-        g.setColor(topkaBoja);
+        g.setColor(this.col);
         g.fillOval(topkas.x, topkas.y, radius, radius);
         g.setColor(Color.black);
         g.drawOval(topkas.x,topkas.y, radius, radius);
