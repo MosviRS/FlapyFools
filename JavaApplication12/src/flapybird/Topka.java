@@ -18,6 +18,7 @@ import java.awt.event.MouseListener;
 import java.io.DataInputStream;
 import java.io.DataOutputStream;
 import java.net.Socket;
+import java.util.ArrayList;
 import java.util.Random;
 import javax.imageio.ImageIO;
 import javax.swing.JOptionPane;
@@ -34,6 +35,7 @@ public class Topka extends javax.swing.JPanel implements MouseListener{
     int numBars = 200;
     Rectangle[] bars = new Rectangle[numBars];
     Circles cir;
+    ArrayList <Circles> arrcir= new ArrayList();
     Font font = new Font("TimesRoman", Font.PLAIN, 40);
     Font malFont = new Font("TimesRoman", Font.BOLD, 15);
     public int HEITH_WINDOWS_TOP,HEITH_WINDOWS_DOWN;
@@ -61,17 +63,34 @@ public class Topka extends javax.swing.JPanel implements MouseListener{
         
            
     }
-    public void main(){
+    public void main(String data_clientes){
         
             x = 150;
             y = 50;
             topka = new Rectangle(x, y, radius, radius);
-
+            extraerdatos(data_clientes);
             kreirajScena();
             this.addMouseListener(this);
             vreme = 0;
     }
-    
+    public void extraerdatos(String data_clientes){
+        String [] data=data_clientes.split("\\|");
+        int r,g,b;
+        for (int i = 0; i < data.length; i++) {
+            Circles cliente = new Circles();
+            String [] extrac=data[i].split(";");
+            String color=extrac[2].replaceAll("(\\()|(\\))","");
+            String [] rgb=color.split(",");
+            r=Integer.valueOf(rgb[0]);
+            g=Integer.valueOf(rgb[1]);
+            b=Integer.valueOf(rgb[2]);
+            
+            cliente.setId(extrac[0]);
+            cliente.setCol(new Color(r,g,b));
+            cliente.setClintes(extrac[3]);
+            arrcir.add(cliente);
+        }
+    }
    
     /**
      * This method is called from within the constructor to initialize the form.

@@ -157,17 +157,18 @@ public class Menu extends javax.swing.JFrame {
 
     private void jButton1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton1ActionPerformed
         // TODO add your handling code here:
+        String data_clientes;
                 if(!color.equals("")){
                  Circles cir= new Circles();
                  Flappy iniciar = new Flappy();
                  iniciar.cliente=concetar();
                  JOptionPane.showMessageDialog(null,"Waiting","Esperando a los demas jugadores",JOptionPane.INFORMATION_MESSAGE);
-                 iniciar.Recibir_clietes();
+                 data_clientes=iniciar.Recibir_clietes();
                  String []circel=iniciar.recibir_data();
                  cir.setId(circel[0]);
                  cir.setClintes(circel[1]);
                  cir.setCol(col);
-                 iniciar.main(cir);
+                 iniciar.main(cir,data_clientes);
                  iniciar.comenzar(circel[3]);
                 // JOptionPane.showMessageDialog(null,"Waiting","Esperando a los demas jugadores",JOptionPane.INFORMATION_MESSAGE);
                  iniciar.setVisible(true);

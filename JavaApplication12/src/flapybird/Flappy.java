@@ -34,9 +34,9 @@ public class Flappy extends javax.swing.JFrame {
          
          
     }
-    public void main(Circles cir){
+    public void main(Circles cir,String data_clientes){
         krug.cir=cir;
-        krug.main();
+        krug.main(data_clientes);
         System.out.println(cir.getId()+" "+cir.getClintes());
         
         this.setSize(580, 700);
@@ -106,22 +106,24 @@ public class Flappy extends javax.swing.JFrame {
             }
     
    }
-   public void Recibir_clietes(){
-       
+   public String Recibir_clietes(){
+       String data=null;
      
        try{
             in = new DataInputStream(this.cliente.getInputStream());
             out = new DataOutputStream(this.cliente.getOutputStream());
             
-            String data=in.readUTF();
+            data=in.readUTF();
             System.out.println("datso "+data);
             
            
            
            
          } catch (Exception e) {
+            data="no hay datois";
             e.printStackTrace();
         }
+        return data;
        
    }
     public static void main(String args[]) {
