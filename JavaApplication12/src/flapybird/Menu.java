@@ -168,7 +168,7 @@ public class Menu extends javax.swing.JFrame {
                  cir.setId(circel[0]);
                  cir.setClintes(circel[1]);
                  cir.setCol(col);
-                 iniciar.main(cir,data_clientes);
+                 iniciar.main(cir,data_clientes,iniciar.cliente);
                  iniciar.comenzar(circel[3]);
                 // JOptionPane.showMessageDialog(null,"Waiting","Esperando a los demas jugadores",JOptionPane.INFORMATION_MESSAGE);
                  iniciar.setVisible(true);
