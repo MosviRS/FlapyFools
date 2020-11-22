@@ -13,13 +13,18 @@ import java.awt.Graphics;
 import java.awt.Graphics2D;
 import java.awt.Point;
 import java.awt.Rectangle;
+import java.awt.event.KeyEvent;
+import java.awt.event.KeyListener;
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseListener;
 import java.io.DataInputStream;
 import java.io.DataOutputStream;
+import java.io.IOException;
 import java.net.Socket;
 import java.util.ArrayList;
 import java.util.Random;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import javax.imageio.ImageIO;
 import javax.swing.JOptionPane;
 
@@ -27,7 +32,7 @@ import javax.swing.JOptionPane;
  *
  * @author Sammy Guergachi <sguergachi at gmail.com>
  */
-public class Topka extends javax.swing.JPanel implements MouseListener{
+public class Topka extends javax.swing.JPanel implements MouseListener,KeyListener{
 
     /**
      * Creates new form Topka
@@ -41,7 +46,7 @@ public class Topka extends javax.swing.JPanel implements MouseListener{
     public int HEITH_WINDOWS_TOP,HEITH_WINDOWS_DOWN;
     Point force = new Point(0, -20);
     Point scenaPos = new Point(500, 0);
-    
+    public Socket Cliente;
     boolean gameOver = false;
     boolean gameStarted = false;
     int radius = 30;
@@ -54,6 +59,8 @@ public class Topka extends javax.swing.JPanel implements MouseListener{
     Rectangle topka;
     int poeni = 0;
     int vreme = 0;
+    private DataOutputStream out;
+    private DataInputStream in;
     
    
     
@@ -71,6 +78,9 @@ public class Topka extends javax.swing.JPanel implements MouseListener{
             extraerdatos(data_clientes);
             kreirajScena();
             this.addMouseListener(this);
+            this.addKeyListener(this);
+            setFocusable(true);
+            requestFocusInWindow();
             vreme = 0;
     }
     public void extraerdatos(String data_clientes){
@@ -109,6 +119,17 @@ public class Topka extends javax.swing.JPanel implements MouseListener{
                 formMousePressed(evt);
             }
         });
+        addKeyListener(new java.awt.event.KeyAdapter() {
+            public void keyPressed(java.awt.event.KeyEvent evt) {
+                formKeyPressed(evt);
+            }
+            public void keyReleased(java.awt.event.KeyEvent evt) {
+                formKeyReleased(evt);
+            }
+            public void keyTyped(java.awt.event.KeyEvent evt) {
+                formKeyTyped(evt);
+            }
+        });
 
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(this);
         this.setLayout(layout);
@@ -124,7 +145,7 @@ public class Topka extends javax.swing.JPanel implements MouseListener{
 
     private void formMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_formMouseClicked
         // TODO add your handling code here:
-        System.out.println("hola");
+       // System.out.println("hola");
         
     }//GEN-LAST:event_formMouseClicked
 
@@ -132,6 +153,22 @@ public class Topka extends javax.swing.JPanel implements MouseListener{
         // TODO add your handling code here:
      
     }//GEN-LAST:event_formMousePressed
+
+    private void formKeyTyped(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_formKeyTyped
+        // TODO add your handling code here:
+        
+   
+    }//GEN-LAST:event_formKeyTyped
+
+    private void formKeyReleased(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_formKeyReleased
+        // TODO add your handling code here:
+      
+    }//GEN-LAST:event_formKeyReleased
+
+    private void formKeyPressed(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_formKeyPressed
+        // TODO add your handling code here:
+       
+    }//GEN-LAST:event_formKeyPressed
 
     void dodajVreme(int v)
     {
@@ -173,7 +210,7 @@ public class Topka extends javax.swing.JPanel implements MouseListener{
         Random rand = new Random();
         scenaPos.x -= 1;
         Color col = g.getColor();
-        System.out.println("las Y "+topka.y+" "+scenaPos.y);
+//        System.out.println("las Y "+topka.y+" "+scenaPos.y);
         boolean kolizija = false;
         
         for (int i = 0; i < numBars; i++)
@@ -293,9 +330,11 @@ public class Topka extends javax.swing.JPanel implements MouseListener{
         if (kolizija)
             gameOver = true;
         
-        
-        
-        cir.DrawShapes(g,topkaBoja,topka);
+      
+               
+        cir.DrawShapes(g,topka.x,topka.y);
+        sendData();
+        reciveData(g);
         
 //        for (int i = 0; i < cir.length; i++) {
 //             
@@ -335,8 +374,65 @@ public class Topka extends javax.swing.JPanel implements MouseListener{
     public void mouseExited(MouseEvent e) {
       
     }
+         
     
+    public void sendData(){
+        try {
+         
+            out = new DataOutputStream(this.Cliente.getOutputStream());
+            
+            out.writeUTF(cir.getPos_X()+","+cir.getPos_Y()+","+cir.getId());
+
+        } catch (IOException ex) {
+            Logger.getLogger(Topka.class.getName()).log(Level.SEVERE, null, ex);
+        }
+    }
+     public void reciveData(Graphics g){
+        try {
+            in = new DataInputStream(this.Cliente.getInputStream());
+            
+            String cord=in.readUTF();
+            
+            if(cord!=null){
+                 String [] data= cord.split(",");
+                 if(!data[2].equals(cir.getId())){
+                      
+                       int x=Integer.valueOf(data[0]);
+                       int y=Integer.valueOf(data[1]);
+                       arrcir.get(Integer.valueOf(data[2])).DrawShapes(g,x,y);
+                 }
+            
+              //  System.out.println("id mas : "+arrcir.get(Integer.valueOf(data[2])).getId());
+            }
+
+//   
+//            if(!data[2].equals(arrcir.get(Integer.valueOf(data[2])).getId())){
+//                arrcir
+//            }
+       
+        } catch (IOException ex) {
+            Logger.getLogger(Topka.class.getName()).log(Level.SEVERE, null, ex);
+        }
+    }
+
+    @Override
+    public void keyTyped(KeyEvent e) {
+      
+    }
+
+    @Override
+    public void keyPressed(KeyEvent e) {
+       System.out.println("hola");
+        if (e.getKeyCode() == KeyEvent.VK_UP){
+        //Do something
+           force.y += -20;
+        }
+    }
+
+    @Override
+    public void keyReleased(KeyEvent e) {
     
+    }
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
     // End of variables declaration//GEN-END:variables

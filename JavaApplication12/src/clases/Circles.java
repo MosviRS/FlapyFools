@@ -68,14 +68,14 @@ public class Circles extends Clase_Cliente {
      public Circles(){
          
      }
-      public void DrawShapes(Graphics g,Color topkaBoja,Rectangle topkas){
-          this.setPos_Y(topkas.y);
-          this.setPos_X(topkas.x);
+      public void DrawShapes(Graphics g,int x,int y){
+          this.setPos_Y(y);
+          this.setPos_X(x);
           //this.pos_X=topkas.x;
         g.setColor(this.col);
-        g.fillOval(topkas.x, topkas.y, radius, radius);
+        g.fillOval(x, y, radius, radius);
         g.setColor(Color.black);
-        g.drawOval(topkas.x,topkas.y, radius, radius);
+        g.drawOval(x,y, radius, radius);
   
     }
 }

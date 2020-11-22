@@ -49,7 +49,7 @@ public class Animacion extends Thread{
            
             datos="0;0;0;1";
 //            cri.setEsatdo(1);
-            out.writeUTF(datos);
+          //  out.writeUTF(datos);
         } catch (Exception e) {
             e.printStackTrace();
         }

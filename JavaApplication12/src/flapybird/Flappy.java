@@ -34,8 +34,9 @@ public class Flappy extends javax.swing.JFrame {
          
          
     }
-    public void main(Circles cir,String data_clientes){
+    public void main(Circles cir,String data_clientes,Socket Cliente){
         krug.cir=cir;
+        krug.Cliente=Cliente;
         krug.main(data_clientes);
         System.out.println(cir.getId()+" "+cir.getClintes());
         
