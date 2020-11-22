@@ -30,7 +30,6 @@ public class Servidor {
         String datos="";
         try {
             //Inicializamos la matriz del juego con -1
-
             //Creamos el socket servidor
             ServerSocket servidor = new ServerSocket(puerto,noConexiones);
             //Ciclo infinito para estar escuchando por nuevos jugadores
