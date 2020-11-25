@@ -10,6 +10,7 @@ import java.awt.BorderLayout;
 import java.io.DataInputStream;
 import java.io.DataOutputStream;
 import java.net.Socket;
+import javax.swing.JDialog;
 import javax.swing.JFrame;
 import javax.swing.JOptionPane;
 import javax.swing.JPanel;
@@ -96,14 +97,17 @@ public class Flappy extends javax.swing.JFrame {
         }
        return  separado;
   }
-   public void comenzar(String bandera){
+   public boolean comenzar(String bandera){
       
             if(bandera.equals("0")){
+                
                 anima= new Animacion(cliente);
                 Thread anim = new Thread(anima);
                 anim.start();
+                return true;
             }else{
                 JOptionPane.showMessageDialog(null,"Waiting","Esperando a los demas jugadores",JOptionPane.INFORMATION_MESSAGE);
+                return false;
             }
     
    }

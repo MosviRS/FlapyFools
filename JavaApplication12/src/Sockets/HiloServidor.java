@@ -56,7 +56,7 @@ public class HiloServidor implements Runnable{
                 String rec=in.readUTF();
 //                recibido =rec.split(";");
 //                idCliente=idCliente+Integer.valueOf(recibido[3]);
-                System.out.println(rec);
+               // System.out.println(rec);
 //               
 //               if(idCliente==1){
 //                   recibido[3]="0";
