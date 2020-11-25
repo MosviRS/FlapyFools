@@ -226,7 +226,7 @@ public class Topka extends javax.swing.JPanel implements MouseListener,KeyListen
                     }else if(cir.getPos_Y() < -90){
 
                         kolizija = true;
-                    }else if(perd>=1){
+                    }else if(perd>=Integer.valueOf(cir.getClintes())){
                         win = true;
                     }else{
                         if (bar.x + bar.width < topka.x)
