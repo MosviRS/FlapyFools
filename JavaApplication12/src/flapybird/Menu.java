@@ -10,9 +10,14 @@ import java.io.DataOutputStream;
 import java.net.Socket;
 import clases.Circles;
 import java.awt.Color;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
+import java.awt.event.ComponentAdapter;
+import java.awt.event.ComponentEvent;
 import javax.swing.JDialog;
 import javax.swing.JFrame;
 import javax.swing.JOptionPane;
+import javax.swing.Timer;
 
 
 /**
@@ -245,13 +250,37 @@ public class Menu extends javax.swing.JFrame {
                  Flappy iniciar = new Flappy();
                  iniciar.cliente=concetar();
                  if (iniciar.cliente!=null){
+                            final JOptionPane msg = new JOptionPane("Esperando a los demas jugadores",JOptionPane.INFORMATION_MESSAGE,JOptionPane.DEFAULT_OPTION,null);
+                            final JDialog dialog = new JDialog();
+                            dialog.setTitle("Waiting");
+                            dialog.setModal(true);
+                            dialog.setContentPane(msg);
+
+                            dialog.setDefaultCloseOperation(JDialog.DO_NOTHING_ON_CLOSE);
+                            dialog.pack();
+                            dialog.setLocationRelativeTo(this);
+                            dialog.addComponentListener(new ComponentAdapter() {
+                                @Override
+                                public void componentShown(ComponentEvent e) {
+                                    super.componentShown(e);
+                                    final Timer t = new Timer(2000,new ActionListener() {
+                                        @Override
+                                        public void actionPerformed(ActionEvent e) {
+                                            dialog.setVisible(false);
+                                        }
+                                    });
+                                    t.setRepeats(false);
+                                    t.start();
+                        }
+                    });
+                    dialog.setVisible(true);
                      
-                     final JOptionPane optionPane = new JOptionPane("Esperando a los demas jugadores", JOptionPane.INFORMATION_MESSAGE, JOptionPane.DEFAULT_OPTION, null);
-                     
-                     JDialog dlg= optionPane.createDialog("Waiting");
-                   //  dlg.setDefaultCloseOperation(JDialog.DO_NOTHING_ON_CLOSE); 
-                     dlg.setVisible(true);
-                     
+//                     final JOptionPane optionPane = new JOptionPane("Esperando a los demas jugadores", JOptionPane.INFORMATION_MESSAGE, JOptionPane.DEFAULT_OPTION, null);
+//                     optionPane.setMessage("esoerado");
+//                     optionPane.createDialog("Waiting");
+//                   //  dlg.setDefaultCloseOperation(JDialog.DO_NOTHING_ON_CLOSE); 
+//                     optionPane.setVisible(true);
+//                     dlg
                     data_clientes=iniciar.Recibir_clietes();
                     String []circel=iniciar.recibir_data();
                     cir.setId(circel[0]);
