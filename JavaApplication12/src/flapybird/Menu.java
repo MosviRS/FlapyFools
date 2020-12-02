@@ -28,7 +28,7 @@ public class Menu extends javax.swing.JFrame {
 //El puerto debe ser el mismo en el que escucha el servidor
     private int puerto = 2027;
     //Si estamos en nuestra misma maquina usamos localhost si no la ip de la maquina servidor
-    private String host = "localhost";
+    //private String host = "25.105.59.1";
    
     private DataOutputStream out;
     private DataInputStream in;
@@ -244,11 +244,13 @@ public class Menu extends javax.swing.JFrame {
 
     private void jButton1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton1ActionPerformed
         // TODO add your handling code here:
-        String data_clientes;
+        String ipserver=JOptionPane.showInputDialog(null,"Introduce la direccion del servidor:","Mensage",JOptionPane.INFORMATION_MESSAGE);
+        if(ipserver!=null && !ipserver.trim().equals("")){
+            String data_clientes;
                 if(!color.equals("")){
                  Circles cir= new Circles();
                  Flappy iniciar = new Flappy();
-                 iniciar.cliente=concetar();
+                 iniciar.cliente=concetar(ipserver);
                  if (iniciar.cliente!=null){
                             final JOptionPane msg = new JOptionPane("Esperando a los demas jugadores",JOptionPane.INFORMATION_MESSAGE,JOptionPane.DEFAULT_OPTION,null);
                             final JDialog dialog = new JDialog();
@@ -300,6 +302,10 @@ public class Menu extends javax.swing.JFrame {
                 }else{
                     JOptionPane.showMessageDialog(null,"No has elegido un color","Color",JOptionPane.INFORMATION_MESSAGE);
                 }
+        }else{
+            JOptionPane.showMessageDialog(null,"IP no valida intentalo de nuevo","Informacion",JOptionPane.INFORMATION_MESSAGE);
+        }
+        
                  
                  
         
@@ -341,7 +347,7 @@ public class Menu extends javax.swing.JFrame {
          color="(255,26,26)";
         col=new Color(255,26,26);
     }//GEN-LAST:event_moradoActionPerformed
-    public Socket concetar(){
+    public Socket concetar(String host){
          Socket cliente=null;
          try {
             //Creamos el socket con el host y el puerto, declaramos los streams de comunicacion
