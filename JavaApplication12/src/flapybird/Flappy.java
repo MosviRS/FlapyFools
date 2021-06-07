@@ -10,6 +10,8 @@ import java.awt.BorderLayout;
 import java.io.DataInputStream;
 import java.io.DataOutputStream;
 import java.net.Socket;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import javax.swing.JDialog;
 import javax.swing.JFrame;
 import javax.swing.JOptionPane;
@@ -30,9 +32,13 @@ public class Flappy extends javax.swing.JFrame {
     public Socket cliente;
     private DataOutputStream out;
     private DataInputStream in;
+    Thread anim;
+    boolean banmdera=false;
+    public String id;
+    
     public Flappy() {
         initComponents();
-         
+        this.setResizable(false);
          
     }
     public void main(Circles cir,String data_clientes,Socket Cliente){
@@ -40,16 +46,21 @@ public class Flappy extends javax.swing.JFrame {
         krug.Cliente=Cliente;
         krug.main(data_clientes);
         System.out.println(cir.getId()+" "+cir.getClintes());
-        
+        id=cir.getId();
         this.setSize(580, 700);
         this.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
-        this.setLocationRelativeTo(null);
+        this.setLocationRelativeTo(this);
         krug.setPreferredSize(getSize());
         krug.HEITH_WINDOWS_DOWN=this.getHeight();
         JPanel panel = new JPanel();          
         panel.add(krug);
         setContentPane(panel);//'panel' al estar dentro del rootpane es totalmente visible
         this.setVisible(true);
+        String [] datlen=data_clientes.split("\\|");
+            
+            if(Integer.parseInt(id)!=(datlen.length-1)){
+                banmdera=true;
+            }
     
     }
     
@@ -63,6 +74,11 @@ public class Flappy extends javax.swing.JFrame {
     private void initComponents() {
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
+        addWindowListener(new java.awt.event.WindowAdapter() {
+            public void windowClosed(java.awt.event.WindowEvent evt) {
+                formWindowClosed(evt);
+            }
+        });
 
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
         getContentPane().setLayout(layout);
@@ -77,6 +93,18 @@ public class Flappy extends javax.swing.JFrame {
 
         pack();
     }// </editor-fold>//GEN-END:initComponents
+
+    private void formWindowClosed(java.awt.event.WindowEvent evt) {//GEN-FIRST:event_formWindowClosed
+        // TODO add your handling code here:
+        if (anim.isAlive()) {
+            anim.stop();
+            
+        }
+        this.dispose();
+        System.exit(0);
+       
+        
+    }//GEN-LAST:event_formWindowClosed
 
     /**
      * @param args the command line arguments
@@ -100,10 +128,18 @@ public class Flappy extends javax.swing.JFrame {
    public boolean comenzar(String bandera){
       
             if(bandera.equals("0")){
-                
+               if(banmdera){
+                   try{
+                   Thread.sleep(2000);
+                   }catch(InterruptedException e){
+                       System.out.println("Error "+ e.getStackTrace());
+                   }
+               }
+              
                 anima= new Animacion(cliente);
-                Thread anim = new Thread(anima);
+                anim = new Thread(anima);
                 anim.start();
+               
                 return true;
             }else{
                 JOptionPane.showMessageDialog(null,"Waiting","Esperando a los demas jugadores",JOptionPane.INFORMATION_MESSAGE);
@@ -119,6 +155,7 @@ public class Flappy extends javax.swing.JFrame {
             out = new DataOutputStream(this.cliente.getOutputStream());
             
             data=in.readUTF();
+      
             System.out.println("datso "+data);
             
            

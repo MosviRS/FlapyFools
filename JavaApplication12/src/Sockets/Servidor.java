@@ -5,6 +5,7 @@ import java.io.DataOutputStream;
 import java.lang.reflect.Array;
 import java.net.ServerSocket;
 import java.net.Socket;
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.LinkedList;
 
@@ -17,6 +18,7 @@ public class Servidor {
     private LinkedList<Socket> usuarios = new LinkedList<Socket>();
     //Variable para controlar el turno de cada jugador
     private Boolean turno = true;
+    private ArrayList<String>  arr= new ArrayList<String>(); 
     //Matriz donde se guardan los movimientos 
 
     //Numero de veces que se juega...para controlar las X y O
@@ -26,14 +28,25 @@ public class Servidor {
      private DataOutputStream out;
     private DataInputStream in;
    //Funcion para que el servidor empieze a recibir conexiones de clientes
+    public void array(ArrayList<String> arr){
+        ArrayList<String> arrcopy= new ArrayList();
+        arrcopy= arr;
+        arrcopy.remove(1);
+    }
     public void escuchar(){
         String datos="";
+        arr.add("w23");
+        arr.add("djend");
+        arr.add("ndd");
+        array(arr);
+        System.out.println(Arrays.toString(arr.toArray()));
         try {
             //Inicializamos la matriz del juego con -1
             //Creamos el socket servidor
             ServerSocket servidor = new ServerSocket(puerto,noConexiones);
             //Ciclo infinito para estar escuchando por nuevos jugadores
             System.out.println("Esperando jugadores....");
+            System.out.println(servidor.getLocalSocketAddress());
             while(usuarios.size()<2){
                     //Cuando un jugador se conecte guardamos el socket en nuestra lista
                      cliente = servidor.accept();
@@ -92,6 +105,7 @@ public class Servidor {
             in = new DataInputStream(cli.getInputStream());
             out = new DataOutputStream(cli.getOutputStream());
             out.writeUTF(cir[0]+";"+cir[1]+";"+cir[2]+";"+cir[3]);
+            out.flush();
         }catch(Exception e){
             System.out.println("no s eudo mandar la condirmacion");
         }
@@ -101,6 +115,7 @@ public class Servidor {
             in = new DataInputStream(cli.getInputStream());
             out = new DataOutputStream(cli.getOutputStream());
             out.writeUTF(datos);
+            out.flush();
         }catch(Exception e){
             System.out.println("no s eudo mandar ka condirmacion");
         }

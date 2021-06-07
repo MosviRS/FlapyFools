@@ -14,9 +14,12 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.ComponentAdapter;
 import java.awt.event.ComponentEvent;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import javax.swing.JDialog;
 import javax.swing.JFrame;
 import javax.swing.JOptionPane;
+import javax.swing.SwingWorker;
 import javax.swing.Timer;
 
 
@@ -27,14 +30,18 @@ import javax.swing.Timer;
 public class Menu extends javax.swing.JFrame {
 //El puerto debe ser el mismo en el que escucha el servidor
     private int puerto = 2027;
+    
     //Si estamos en nuestra misma maquina usamos localhost si no la ip de la maquina servidor
     //private String host = "25.105.59.1";
-   
+    public String []circel;
     private DataOutputStream out;
     private DataInputStream in;
     String datos;
     String color="";
     Color col=null;
+    public JDialog dialog;
+    public boolean waintclienbtes=true;
+    public waiting_jugadores panel;
     /**
      * Creates new form Menu
      */
@@ -42,7 +49,7 @@ public class Menu extends javax.swing.JFrame {
         initComponents();
         this.setLocationRelativeTo(null);
         this.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
- 
+        this.setResizable(false);
         
     }
 
@@ -78,6 +85,7 @@ public class Menu extends javax.swing.JFrame {
         jButton1.setForeground(new java.awt.Color(255, 255, 255));
         jButton1.setText("Play");
         jButton1.setBorder(new javax.swing.border.LineBorder(new java.awt.Color(2, 25, 25), 4, true));
+        jButton1.setCursor(new java.awt.Cursor(java.awt.Cursor.HAND_CURSOR));
         jButton1.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 jButton1ActionPerformed(evt);
@@ -86,6 +94,7 @@ public class Menu extends javax.swing.JFrame {
 
         jPanel2.setBackground(new java.awt.Color(255, 255, 255));
         jPanel2.setBorder(new javax.swing.border.SoftBevelBorder(javax.swing.border.BevelBorder.LOWERED));
+        jPanel2.setCursor(new java.awt.Cursor(java.awt.Cursor.DEFAULT_CURSOR));
 
         jLabel1.setFont(new java.awt.Font("Segoe UI Black", 1, 18)); // NOI18N
         jLabel1.setForeground(new java.awt.Color(0, 0, 0));
@@ -93,7 +102,8 @@ public class Menu extends javax.swing.JFrame {
 
         jToggleButton2.setBackground(new java.awt.Color(204, 153, 0));
         buttonGroup1.add(jToggleButton2);
-        jToggleButton2.setBorder(null);
+        jToggleButton2.setBorder(new javax.swing.border.LineBorder(new java.awt.Color(0, 0, 0), 5, true));
+        jToggleButton2.setCursor(new java.awt.Cursor(java.awt.Cursor.HAND_CURSOR));
         jToggleButton2.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 jToggleButton2ActionPerformed(evt);
@@ -102,7 +112,8 @@ public class Menu extends javax.swing.JFrame {
 
         jToggleButton1.setBackground(new java.awt.Color(0, 102, 51));
         buttonGroup1.add(jToggleButton1);
-        jToggleButton1.setBorder(null);
+        jToggleButton1.setBorder(new javax.swing.border.LineBorder(new java.awt.Color(0, 0, 0), 5, true));
+        jToggleButton1.setCursor(new java.awt.Cursor(java.awt.Cursor.HAND_CURSOR));
         jToggleButton1.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 jToggleButton1ActionPerformed(evt);
@@ -111,7 +122,8 @@ public class Menu extends javax.swing.JFrame {
 
         naraj.setBackground(new java.awt.Color(255, 102, 0));
         buttonGroup1.add(naraj);
-        naraj.setBorder(null);
+        naraj.setBorder(new javax.swing.border.LineBorder(new java.awt.Color(0, 0, 0), 5, true));
+        naraj.setCursor(new java.awt.Cursor(java.awt.Cursor.HAND_CURSOR));
         naraj.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 narajActionPerformed(evt);
@@ -120,7 +132,8 @@ public class Menu extends javax.swing.JFrame {
 
         azul1.setBackground(new java.awt.Color(0, 51, 153));
         buttonGroup1.add(azul1);
-        azul1.setBorder(null);
+        azul1.setBorder(new javax.swing.border.LineBorder(new java.awt.Color(0, 0, 0), 5, true));
+        azul1.setCursor(new java.awt.Cursor(java.awt.Cursor.HAND_CURSOR));
         azul1.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 azul1ActionPerformed(evt);
@@ -129,7 +142,8 @@ public class Menu extends javax.swing.JFrame {
 
         red.setBackground(new java.awt.Color(255, 26, 26));
         buttonGroup1.add(red);
-        red.setBorder(null);
+        red.setBorder(new javax.swing.border.LineBorder(new java.awt.Color(0, 0, 0), 5, true));
+        red.setCursor(new java.awt.Cursor(java.awt.Cursor.HAND_CURSOR));
         red.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 redActionPerformed(evt);
@@ -138,7 +152,8 @@ public class Menu extends javax.swing.JFrame {
 
         morado.setBackground(new java.awt.Color(102, 0, 102));
         buttonGroup1.add(morado);
-        morado.setBorder(null);
+        morado.setBorder(new javax.swing.border.LineBorder(new java.awt.Color(0, 0, 0), 5, true));
+        morado.setCursor(new java.awt.Cursor(java.awt.Cursor.HAND_CURSOR));
         morado.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 moradoActionPerformed(evt);
@@ -248,70 +263,65 @@ public class Menu extends javax.swing.JFrame {
         if(ipserver!=null && !ipserver.trim().equals("")){
             String data_clientes;
                 if(!color.equals("")){
-                 Circles cir= new Circles();
-                 Flappy iniciar = new Flappy();
-                 iniciar.cliente=concetar(ipserver);
-                 if (iniciar.cliente!=null){
-                            final JOptionPane msg = new JOptionPane("Esperando a los demas jugadores",JOptionPane.INFORMATION_MESSAGE,JOptionPane.DEFAULT_OPTION,null);
-                            final JDialog dialog = new JDialog();
-                            dialog.setTitle("Waiting");
-                            dialog.setModal(true);
-                            dialog.setContentPane(msg);
-
-                            dialog.setDefaultCloseOperation(JDialog.DO_NOTHING_ON_CLOSE);
-                            dialog.pack();
-                            dialog.setLocationRelativeTo(this);
-                            dialog.addComponentListener(new ComponentAdapter() {
-                                @Override
-                                public void componentShown(ComponentEvent e) {
-                                    super.componentShown(e);
-                                    final Timer t = new Timer(2000,new ActionListener() {
-                                        @Override
-                                        public void actionPerformed(ActionEvent e) {
-                                            dialog.setVisible(false);
-                                        }
-                                    });
-                                    t.setRepeats(false);
-                                    t.start();
-                        }
-                    });
-                    dialog.setVisible(true);
-                     
-//                     final JOptionPane optionPane = new JOptionPane("Esperando a los demas jugadores", JOptionPane.INFORMATION_MESSAGE, JOptionPane.DEFAULT_OPTION, null);
-//                     optionPane.setMessage("esoerado");
-//                     optionPane.createDialog("Waiting");
-//                   //  dlg.setDefaultCloseOperation(JDialog.DO_NOTHING_ON_CLOSE); 
-//                     optionPane.setVisible(true);
-//                     dlg
-                    data_clientes=iniciar.Recibir_clietes();
-                    String []circel=iniciar.recibir_data();
-                    cir.setId(circel[0]);
-                    cir.setClintes(circel[1]);
-                    cir.setCol(col);
-                    iniciar.main(cir,data_clientes,iniciar.cliente);
-                    
-                    iniciar.comenzar(circel[3]);
-                   // JOptionPane.showMessageDialog(null,"Waiting","Esperando a los demas jugadores",JOptionPane.INFORMATION_MESSAGE);
-                   // dlg.setVisible(false);
-                    iniciar.setVisible(true);
-                     
-                    this.dispose();
+                    Flappy iniciar = new Flappy();
+                    Circles cir= new Circles();
+                    iniciar.cliente=concetar(ipserver.trim());
+               
+                        if (iniciar.cliente!=null){
+                                final JOptionPane msg = new JOptionPane("Esperando a los demas jugadores",JOptionPane.INFORMATION_MESSAGE,JOptionPane.DEFAULT_OPTION,null);
+                                panel= new waiting_jugadores();       
+                                dialog = new JDialog();
+                                dialog=msg.createDialog(jPanel1,"Warning");
+                                dialog.setContentPane(msg);
+                                dialog.setDefaultCloseOperation(JDialog.DISPOSE_ON_CLOSE);
+                                dialog.pack();
+                                dialog.setLocationRelativeTo(null);
+                                SwingWorker<Void, Void> worker = new SwingWorker<Void,Void>() {
+                                    @Override
+                                    protected Void doInBackground() throws InterruptedException{ 
+                                        /** Execute some operation */  
+                                        String data_clientes;
+                                        data_clientes=iniciar.Recibir_clietes();
+                                        circel=iniciar.recibir_data();
+                                        cir.setId(circel[0]);
+                                        cir.setClintes(circel[1]);
+                                        cir.setCol(col);
+                                        iniciar.main(cir,data_clientes,iniciar.cliente);
+                                        return null;
+                                    }
+                                    @Override
+                                    protected void done() {
+                                        dialog.dispose();
+                                    }
+                                };
+                                worker.execute();
+                                dialog.setVisible(true);
+                                try {
+                                    worker.get();
+                                } catch (Exception e1) {
+                                    e1.printStackTrace();
+                                }
+                                this.dispose();   
+                                iniciar.comenzar(circel[3]);
+                                   
+                  
+                                //s dialog.dispose();
+                        //t.stop();
+                       
+                       // JOptionPane.showMessageDialog(null,"Waiting","Esperando a los demas jugadores",JOptionPane.INFORMATION_MESSAGE);
+                       // dlg.setVisible(false);
+                        //iniciar.setVisible(true);     
                  }
                  
-                    
                 }else{
                     JOptionPane.showMessageDialog(null,"No has elegido un color","Color",JOptionPane.INFORMATION_MESSAGE);
                 }
         }else{
             JOptionPane.showMessageDialog(null,"IP no valida intentalo de nuevo","Informacion",JOptionPane.INFORMATION_MESSAGE);
         }
-        
-                 
-                 
-        
        // this.dispose();
     }//GEN-LAST:event_jButton1ActionPerformed
-
+ 
     private void jToggleButton2ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jToggleButton2ActionPerformed
         // TODO add your handling code here:
         color="(204,153,0)";
@@ -345,7 +355,7 @@ public class Menu extends javax.swing.JFrame {
     private void moradoActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_moradoActionPerformed
         // TODO add your handling code here:
          color="(255,26,26)";
-        col=new Color(255,26,26);
+         col=new Color(255,26,26);
     }//GEN-LAST:event_moradoActionPerformed
     public Socket concetar(String host){
          Socket cliente=null;
@@ -355,6 +365,7 @@ public class Menu extends javax.swing.JFrame {
             in = new DataInputStream(cliente.getInputStream());
             out = new DataOutputStream(cliente.getOutputStream());
             out.writeUTF("0;0;"+color+";0");
+            out.flush();
             return cliente;
         } catch (Exception e) {
             e.printStackTrace();

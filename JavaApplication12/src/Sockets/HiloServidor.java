@@ -80,6 +80,7 @@ public class HiloServidor implements Runnable{
                 for (Socket usuario : usuarios) {
                     out = new DataOutputStream(usuario.getOutputStream());
                     out.writeUTF(rec);
+                    out.flush();
                 }
           }
         } catch (Exception e) {

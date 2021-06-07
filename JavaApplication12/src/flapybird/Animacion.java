@@ -66,6 +66,8 @@ public class Animacion extends Thread{
                 datos += f + ";";
                 datos += c + ";";
                 out.writeUTF(datos);
+                out.flush();
+                datos="";
             }
             else{
                 //JOptionPane.showMessageDialog(this, "Esperando Jugadores");
