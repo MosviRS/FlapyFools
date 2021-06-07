@@ -61,7 +61,8 @@ public class Topka extends javax.swing.JPanel implements MouseListener,KeyListen
     int vreme = 0;
     private DataOutputStream out;
     private DataInputStream in;
-    
+    private int perd=0;
+    private boolean win=false;
    
     
     public Topka()
@@ -225,6 +226,8 @@ public class Topka extends javax.swing.JPanel implements MouseListener,KeyListen
                     }else if(cir.getPos_Y() < -90){
 
                         kolizija = true;
+                    }else if(perd>=Integer.valueOf(cir.getClintes())){
+                        win = true;
                     }else{
                         if (bar.x + bar.width < topka.x)
                             poeni = i+1;
@@ -317,12 +320,27 @@ public class Topka extends javax.swing.JPanel implements MouseListener,KeyListen
             return ;
         }
         
-        if (gameOver)
-        {
+        if (gameOver && !win )
+        {   try {
+                out = new DataOutputStream(this.Cliente.getOutputStream());
+                out.writeUTF(0+","+0+","+cir.getId());
+            } catch (IOException ex) {
+                Logger.getLogger(Topka.class.getName()).log(Level.SEVERE, null, ex);
+            }
+            
             g.setFont(font);
             String poraka = "GAME OVER";
             int w = g2d.getFontMetrics(font).stringWidth(poraka);
             g.drawString(poraka, cw-w/2, ch);
+            
+            return;
+        }
+        if(win){
+             g.setFont(font);
+            String poraka = "YOU WIN";
+            int w = g2d.getFontMetrics(font).stringWidth(poraka);
+            g.drawString(poraka, cw-w/2, ch);
+            gameOver = false;
             return;
         }
         
@@ -333,7 +351,7 @@ public class Topka extends javax.swing.JPanel implements MouseListener,KeyListen
       
                
         cir.DrawShapes(g,topka.x,topka.y);
-        sendData();
+        sendData(g);
         reciveData(g);
         
 //        for (int i = 0; i < cir.length; i++) {
@@ -376,13 +394,15 @@ public class Topka extends javax.swing.JPanel implements MouseListener,KeyListen
     }
          
     
-    public void sendData(){
+    public void sendData(Graphics g){
+        
         try {
          
             out = new DataOutputStream(this.Cliente.getOutputStream());
             
             out.writeUTF(cir.getPos_X()+","+cir.getPos_Y()+","+cir.getId());
-
+            out.flush();
+          
         } catch (IOException ex) {
             Logger.getLogger(Topka.class.getName()).log(Level.SEVERE, null, ex);
         }
@@ -396,10 +416,12 @@ public class Topka extends javax.swing.JPanel implements MouseListener,KeyListen
             if(cord!=null){
                  String [] data= cord.split(",");
                  if(!data[2].equals(cir.getId())){
-                      
+                       if (data[0].equals("0") && data[1].equals("0")){
+                           perd++;
+                       }
                        int x=Integer.valueOf(data[0]);
                        int y=Integer.valueOf(data[1]);
-                       arrcir.get(Integer.valueOf(data[2])).DrawShapes(g,x,y);
+                       arrcir.get(Integer.valueOf(data[2])).DrawShapes(g,x-2,y);
                  }
             
               //  System.out.println("id mas : "+arrcir.get(Integer.valueOf(data[2])).getId());

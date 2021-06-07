@@ -10,8 +10,17 @@ import java.io.DataOutputStream;
 import java.net.Socket;
 import clases.Circles;
 import java.awt.Color;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
+import java.awt.event.ComponentAdapter;
+import java.awt.event.ComponentEvent;
+import java.util.logging.Level;
+import java.util.logging.Logger;
+import javax.swing.JDialog;
 import javax.swing.JFrame;
 import javax.swing.JOptionPane;
+import javax.swing.SwingWorker;
+import javax.swing.Timer;
 
 
 /**
@@ -21,14 +30,18 @@ import javax.swing.JOptionPane;
 public class Menu extends javax.swing.JFrame {
 //El puerto debe ser el mismo en el que escucha el servidor
     private int puerto = 2027;
+    
     //Si estamos en nuestra misma maquina usamos localhost si no la ip de la maquina servidor
-    private String host = "localhost";
-   
+    //private String host = "25.105.59.1";
+    public String []circel;
     private DataOutputStream out;
     private DataInputStream in;
     String datos;
     String color="";
     Color col=null;
+    public JDialog dialog;
+    public boolean waintclienbtes=true;
+    public waiting_jugadores panel;
     /**
      * Creates new form Menu
      */
@@ -36,7 +49,7 @@ public class Menu extends javax.swing.JFrame {
         initComponents();
         this.setLocationRelativeTo(null);
         this.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
- 
+        this.setResizable(false);
         
     }
 
@@ -56,13 +69,23 @@ public class Menu extends javax.swing.JFrame {
         jLabel1 = new javax.swing.JLabel();
         jToggleButton2 = new javax.swing.JToggleButton();
         jToggleButton1 = new javax.swing.JToggleButton();
+        naraj = new javax.swing.JToggleButton();
+        azul1 = new javax.swing.JToggleButton();
+        red = new javax.swing.JToggleButton();
+        morado = new javax.swing.JToggleButton();
+        jLabel2 = new javax.swing.JLabel();
+        jLabel3 = new javax.swing.JLabel();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
 
+        jPanel1.setBackground(new java.awt.Color(0, 153, 51));
+
         jButton1.setBackground(new java.awt.Color(153, 153, 0));
         jButton1.setFont(new java.awt.Font("Franklin Gothic Demi Cond", 1, 24)); // NOI18N
+        jButton1.setForeground(new java.awt.Color(255, 255, 255));
         jButton1.setText("Play");
-        jButton1.setBorder(new javax.swing.border.LineBorder(new java.awt.Color(0, 51, 51), 4, true));
+        jButton1.setBorder(new javax.swing.border.LineBorder(new java.awt.Color(2, 25, 25), 4, true));
+        jButton1.setCursor(new java.awt.Cursor(java.awt.Cursor.HAND_CURSOR));
         jButton1.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 jButton1ActionPerformed(evt);
@@ -71,12 +94,16 @@ public class Menu extends javax.swing.JFrame {
 
         jPanel2.setBackground(new java.awt.Color(255, 255, 255));
         jPanel2.setBorder(new javax.swing.border.SoftBevelBorder(javax.swing.border.BevelBorder.LOWERED));
+        jPanel2.setCursor(new java.awt.Cursor(java.awt.Cursor.DEFAULT_CURSOR));
 
-        jLabel1.setText("Color");
+        jLabel1.setFont(new java.awt.Font("Segoe UI Black", 1, 18)); // NOI18N
+        jLabel1.setForeground(new java.awt.Color(0, 0, 0));
+        jLabel1.setText("¡Elige uno!");
 
         jToggleButton2.setBackground(new java.awt.Color(204, 153, 0));
         buttonGroup1.add(jToggleButton2);
-        jToggleButton2.setBorder(null);
+        jToggleButton2.setBorder(new javax.swing.border.LineBorder(new java.awt.Color(0, 0, 0), 5, true));
+        jToggleButton2.setCursor(new java.awt.Cursor(java.awt.Cursor.HAND_CURSOR));
         jToggleButton2.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 jToggleButton2ActionPerformed(evt);
@@ -85,10 +112,51 @@ public class Menu extends javax.swing.JFrame {
 
         jToggleButton1.setBackground(new java.awt.Color(0, 102, 51));
         buttonGroup1.add(jToggleButton1);
-        jToggleButton1.setBorder(null);
+        jToggleButton1.setBorder(new javax.swing.border.LineBorder(new java.awt.Color(0, 0, 0), 5, true));
+        jToggleButton1.setCursor(new java.awt.Cursor(java.awt.Cursor.HAND_CURSOR));
         jToggleButton1.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 jToggleButton1ActionPerformed(evt);
+            }
+        });
+
+        naraj.setBackground(new java.awt.Color(255, 102, 0));
+        buttonGroup1.add(naraj);
+        naraj.setBorder(new javax.swing.border.LineBorder(new java.awt.Color(0, 0, 0), 5, true));
+        naraj.setCursor(new java.awt.Cursor(java.awt.Cursor.HAND_CURSOR));
+        naraj.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                narajActionPerformed(evt);
+            }
+        });
+
+        azul1.setBackground(new java.awt.Color(0, 51, 153));
+        buttonGroup1.add(azul1);
+        azul1.setBorder(new javax.swing.border.LineBorder(new java.awt.Color(0, 0, 0), 5, true));
+        azul1.setCursor(new java.awt.Cursor(java.awt.Cursor.HAND_CURSOR));
+        azul1.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                azul1ActionPerformed(evt);
+            }
+        });
+
+        red.setBackground(new java.awt.Color(255, 26, 26));
+        buttonGroup1.add(red);
+        red.setBorder(new javax.swing.border.LineBorder(new java.awt.Color(0, 0, 0), 5, true));
+        red.setCursor(new java.awt.Cursor(java.awt.Cursor.HAND_CURSOR));
+        red.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                redActionPerformed(evt);
+            }
+        });
+
+        morado.setBackground(new java.awt.Color(102, 0, 102));
+        buttonGroup1.add(morado);
+        morado.setBorder(new javax.swing.border.LineBorder(new java.awt.Color(0, 0, 0), 5, true));
+        morado.setCursor(new java.awt.Cursor(java.awt.Cursor.HAND_CURSOR));
+        morado.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                moradoActionPerformed(evt);
             }
         });
 
@@ -97,25 +165,50 @@ public class Menu extends javax.swing.JFrame {
         jPanel2Layout.setHorizontalGroup(
             jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(jPanel2Layout.createSequentialGroup()
-                .addContainerGap()
-                .addComponent(jToggleButton1, javax.swing.GroupLayout.PREFERRED_SIZE, 52, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addGap(52, 52, 52)
+                .addGap(20, 20, 20)
+                .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
+                    .addComponent(jToggleButton1, javax.swing.GroupLayout.PREFERRED_SIZE, 52, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(naraj, javax.swing.GroupLayout.PREFERRED_SIZE, 52, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addGap(56, 56, 56)
+                .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
+                    .addComponent(jToggleButton2, javax.swing.GroupLayout.DEFAULT_SIZE, 52, Short.MAX_VALUE)
+                    .addComponent(morado, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                 .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addComponent(jLabel1, javax.swing.GroupLayout.PREFERRED_SIZE, 105, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(jToggleButton2, javax.swing.GroupLayout.PREFERRED_SIZE, 47, javax.swing.GroupLayout.PREFERRED_SIZE))
-                .addContainerGap(96, Short.MAX_VALUE))
+                    .addComponent(azul1, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.PREFERRED_SIZE, 52, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(red, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.PREFERRED_SIZE, 52, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addGap(35, 35, 35))
+            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel2Layout.createSequentialGroup()
+                .addContainerGap(99, Short.MAX_VALUE)
+                .addComponent(jLabel1, javax.swing.GroupLayout.PREFERRED_SIZE, 154, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addGap(64, 64, 64))
         );
         jPanel2Layout.setVerticalGroup(
             jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(jPanel2Layout.createSequentialGroup()
-                .addContainerGap()
-                .addComponent(jLabel1)
                 .addGap(9, 9, 9)
+                .addComponent(jLabel1)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
                 .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
                     .addComponent(jToggleButton1, javax.swing.GroupLayout.DEFAULT_SIZE, 37, Short.MAX_VALUE)
-                    .addComponent(jToggleButton2, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
-                .addContainerGap(109, Short.MAX_VALUE))
+                    .addComponent(jToggleButton2, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                    .addComponent(azul1, javax.swing.GroupLayout.DEFAULT_SIZE, 37, Short.MAX_VALUE))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 40, Short.MAX_VALUE)
+                .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
+                    .addComponent(naraj, javax.swing.GroupLayout.DEFAULT_SIZE, 37, Short.MAX_VALUE)
+                    .addComponent(red, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                    .addComponent(morado, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                .addGap(32, 32, 32))
         );
+
+        jLabel2.setFont(new java.awt.Font("Segoe UI Black", 2, 36)); // NOI18N
+        jLabel2.setForeground(new java.awt.Color(255, 255, 255));
+        jLabel2.setIcon(new javax.swing.ImageIcon(getClass().getResource("/IMG/oie_transparent (2).png"))); // NOI18N
+        jLabel2.setText("   Flapy ");
+
+        jLabel3.setFont(new java.awt.Font("Segoe UI Black", 2, 36)); // NOI18N
+        jLabel3.setForeground(new java.awt.Color(255, 255, 255));
+        jLabel3.setText("Fools");
 
         javax.swing.GroupLayout jPanel1Layout = new javax.swing.GroupLayout(jPanel1);
         jPanel1.setLayout(jPanel1Layout);
@@ -124,21 +217,30 @@ public class Menu extends javax.swing.JFrame {
             .addGroup(jPanel1Layout.createSequentialGroup()
                 .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addGroup(jPanel1Layout.createSequentialGroup()
-                        .addGap(90, 90, 90)
+                        .addGap(126, 126, 126)
                         .addComponent(jButton1, javax.swing.GroupLayout.PREFERRED_SIZE, 172, javax.swing.GroupLayout.PREFERRED_SIZE))
                     .addGroup(jPanel1Layout.createSequentialGroup()
-                        .addGap(38, 38, 38)
-                        .addComponent(jPanel2, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)))
-                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                        .addGap(47, 47, 47)
+                        .addComponent(jPanel2, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                    .addGroup(jPanel1Layout.createSequentialGroup()
+                        .addGap(63, 63, 63)
+                        .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
+                            .addComponent(jLabel3, javax.swing.GroupLayout.PREFERRED_SIZE, 95, javax.swing.GroupLayout.PREFERRED_SIZE)
+                            .addComponent(jLabel2, javax.swing.GroupLayout.PREFERRED_SIZE, 251, javax.swing.GroupLayout.PREFERRED_SIZE))))
+                .addContainerGap(57, Short.MAX_VALUE))
         );
         jPanel1Layout.setVerticalGroup(
             jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel1Layout.createSequentialGroup()
-                .addContainerGap(107, Short.MAX_VALUE)
+                .addGap(20, 20, 20)
+                .addComponent(jLabel2, javax.swing.GroupLayout.PREFERRED_SIZE, 58, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addComponent(jLabel3)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 30, Short.MAX_VALUE)
                 .addComponent(jPanel2, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addGap(49, 49, 49)
+                .addGap(18, 18, 18)
                 .addComponent(jButton1, javax.swing.GroupLayout.PREFERRED_SIZE, 51, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addGap(28, 28, 28))
+                .addContainerGap())
         );
 
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
@@ -157,33 +259,69 @@ public class Menu extends javax.swing.JFrame {
 
     private void jButton1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton1ActionPerformed
         // TODO add your handling code here:
-        String data_clientes;
+        String ipserver=JOptionPane.showInputDialog(null,"Introduce la direccion del servidor:","Mensage",JOptionPane.INFORMATION_MESSAGE);
+        if(ipserver!=null && !ipserver.trim().equals("")){
+            String data_clientes;
                 if(!color.equals("")){
-                 Circles cir= new Circles();
-                 Flappy iniciar = new Flappy();
-                 iniciar.cliente=concetar();
-                 JOptionPane.showMessageDialog(null,"Waiting","Esperando a los demas jugadores",JOptionPane.INFORMATION_MESSAGE);
-                 data_clientes=iniciar.Recibir_clietes();
-                 String []circel=iniciar.recibir_data();
-                 cir.setId(circel[0]);
-                 cir.setClintes(circel[1]);
-                 cir.setCol(col);
-                 iniciar.main(cir,data_clientes,iniciar.cliente);
-                 iniciar.comenzar(circel[3]);
-                // JOptionPane.showMessageDialog(null,"Waiting","Esperando a los demas jugadores",JOptionPane.INFORMATION_MESSAGE);
-                 iniciar.setVisible(true);
+                    Flappy iniciar = new Flappy();
+                    Circles cir= new Circles();
+                    iniciar.cliente=concetar(ipserver.trim());
+               
+                        if (iniciar.cliente!=null){
+                                final JOptionPane msg = new JOptionPane("Esperando a los demas jugadores",JOptionPane.INFORMATION_MESSAGE,JOptionPane.DEFAULT_OPTION,null);
+                                panel= new waiting_jugadores();       
+                                dialog = new JDialog();
+                                dialog=msg.createDialog(jPanel1,"Warning");
+                                dialog.setContentPane(msg);
+                                dialog.setDefaultCloseOperation(JDialog.DISPOSE_ON_CLOSE);
+                                dialog.pack();
+                                dialog.setLocationRelativeTo(null);
+                                SwingWorker<Void, Void> worker = new SwingWorker<Void,Void>() {
+                                    @Override
+                                    protected Void doInBackground() throws InterruptedException{ 
+                                        /** Execute some operation */  
+                                        String data_clientes;
+                                        data_clientes=iniciar.Recibir_clietes();
+                                        circel=iniciar.recibir_data();
+                                        cir.setId(circel[0]);
+                                        cir.setClintes(circel[1]);
+                                        cir.setCol(col);
+                                        iniciar.main(cir,data_clientes,iniciar.cliente);
+                                        return null;
+                                    }
+                                    @Override
+                                    protected void done() {
+                                        dialog.dispose();
+                                    }
+                                };
+                                worker.execute();
+                                dialog.setVisible(true);
+                                try {
+                                    worker.get();
+                                } catch (Exception e1) {
+                                    e1.printStackTrace();
+                                }
+                                this.dispose();   
+                                iniciar.comenzar(circel[3]);
+                                   
+                  
+                                //s dialog.dispose();
+                        //t.stop();
+                       
+                       // JOptionPane.showMessageDialog(null,"Waiting","Esperando a los demas jugadores",JOptionPane.INFORMATION_MESSAGE);
+                       // dlg.setVisible(false);
+                        //iniciar.setVisible(true);     
+                 }
                  
-                 this.dispose();
-                    
                 }else{
                     JOptionPane.showMessageDialog(null,"No has elegido un color","Color",JOptionPane.INFORMATION_MESSAGE);
                 }
-                 
-                 
-        
+        }else{
+            JOptionPane.showMessageDialog(null,"IP no valida intentalo de nuevo","Informacion",JOptionPane.INFORMATION_MESSAGE);
+        }
        // this.dispose();
     }//GEN-LAST:event_jButton1ActionPerformed
-
+ 
     private void jToggleButton2ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jToggleButton2ActionPerformed
         // TODO add your handling code here:
         color="(204,153,0)";
@@ -195,7 +333,31 @@ public class Menu extends javax.swing.JFrame {
         color="(0,102,51)";
         col=new Color(0,102,51);
     }//GEN-LAST:event_jToggleButton1ActionPerformed
-    public Socket concetar(){
+
+    private void narajActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_narajActionPerformed
+        // TODO add your handling code here:
+         color="(255,102,0)";
+        col=new Color(255,102,0);
+    }//GEN-LAST:event_narajActionPerformed
+
+    private void azul1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_azul1ActionPerformed
+        // TODO add your handling code here:
+         color="(0,51,153)";
+        col=new Color(0,51,153);
+    }//GEN-LAST:event_azul1ActionPerformed
+
+    private void redActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_redActionPerformed
+        // TODO add your handling code here:
+         color="(102,0,102)";
+        col=new Color(102,0,102);
+    }//GEN-LAST:event_redActionPerformed
+
+    private void moradoActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_moradoActionPerformed
+        // TODO add your handling code here:
+         color="(255,26,26)";
+         col=new Color(255,26,26);
+    }//GEN-LAST:event_moradoActionPerformed
+    public Socket concetar(String host){
          Socket cliente=null;
          try {
             //Creamos el socket con el host y el puerto, declaramos los streams de comunicacion
@@ -203,11 +365,15 @@ public class Menu extends javax.swing.JFrame {
             in = new DataInputStream(cliente.getInputStream());
             out = new DataOutputStream(cliente.getOutputStream());
             out.writeUTF("0;0;"+color+";0");
-            
+            out.flush();
+            return cliente;
         } catch (Exception e) {
             e.printStackTrace();
+            JOptionPane.showMessageDialog(null,"NO se pudo conectar con el servido intentelo de nuevo","Error",JOptionPane.ERROR_MESSAGE);
+        
+            return null;
         }
-         return cliente;
+       
     }
     /**
      * @param args the command line arguments
@@ -245,12 +411,18 @@ public class Menu extends javax.swing.JFrame {
     }
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
+    private javax.swing.JToggleButton azul1;
     private javax.swing.ButtonGroup buttonGroup1;
     private javax.swing.JButton jButton1;
     private javax.swing.JLabel jLabel1;
+    private javax.swing.JLabel jLabel2;
+    private javax.swing.JLabel jLabel3;
     private javax.swing.JPanel jPanel1;
     private javax.swing.JPanel jPanel2;
     private javax.swing.JToggleButton jToggleButton1;
     private javax.swing.JToggleButton jToggleButton2;
+    private javax.swing.JToggleButton morado;
+    private javax.swing.JToggleButton naraj;
+    private javax.swing.JToggleButton red;
     // End of variables declaration//GEN-END:variables
 }
